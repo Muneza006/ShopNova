@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: ShopNova
+  devtools:
+    restart:
+      enabled: false
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shopnova_db
+    username: postgres
+    password: Muneza1@
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+  
+  flyway:
+    enabled: false
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
+            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            scope: email,profile
+  
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: pascalmuneza0@gmail.com
+    password: xaol tgng sira sfun
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  
+server:
+  port: 8080
+  error:
+    include-message: always
+
+upload:
+  dir: uploads
+
+jwt:
+  secret: ${JWT_SECRET:ShopNovaSecretKeyForJWTTokenGenerationMustBeLongEnough2024}
+  expiration: 86400000
+
+app:
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:3000
+
+momo:
+  base-url: https://sandbox.momodeveloper.mtn.com
+  primary-key: f5cada2ab9ba4d50aa51407952c5a127
+  secondary-key: 26eeb161a7654f78bdb21fe9c89842ab
+  environment: sandbox
+  currency: EUR
+  callback-host: localhost
