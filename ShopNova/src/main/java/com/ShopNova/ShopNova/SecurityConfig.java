@@ -34,7 +34,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(
-                    "/api/auth/**",
+                    "/api/auth/login",
+                    "/api/auth/register",
+                    "/api/auth/verify-email",
+                    "/api/auth/forgot-password",
+                    "/api/auth/reset-password",
                     "/api/products/**",
                     "/api/categories/**",
                     "/api/orders/**",
@@ -43,6 +47,7 @@ public class SecurityConfig {
                     "/oauth2/**",
                     "/login/oauth2/**"
                 ).permitAll()
+                .requestMatchers("/api/auth/me").authenticated()
                 .requestMatchers("/api/users/**").authenticated()
                 .requestMatchers("/api/wishlist/**").authenticated()
                 .requestMatchers("/api/admin/**").hasAnyAuthority("SUPER_ADMIN", "BACKUP_ADMIN")
@@ -53,14 +58,9 @@ public class SecurityConfig {
             )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
-                    String path = request.getRequestURI();
-                    if (path.startsWith("/api/")) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.setContentType("application/json");
-                        response.getWriter().write("{\"error\":\"Unauthorized\"}");
-                    } else {
-                        response.sendRedirect("/oauth2/authorization/google");
-                    }
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Unauthorized\"}");
                 })
             )
             .formLogin(form -> form.disable())

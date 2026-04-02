@@ -44,7 +44,7 @@ public class AdminUserController {
     public ResponseEntity<?> toggleUserStatus(@PathVariable Long id) {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("User not found"));
-        user.setIsActive(!user.getIsActive());
+        user.setIsActive(!Boolean.TRUE.equals(user.getIsActive()));
         userRepository.save(user);
         return ResponseEntity.ok(Map.of("message", "User status updated"));
     }

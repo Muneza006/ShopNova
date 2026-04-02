@@ -29,8 +29,8 @@ spring:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID:your-google-client-id}
-            client-secret: ${GOOGLE_CLIENT_SECRET:your-google-client-secret}
+            client-id: 614401079406-tbvue7pbiit5uk0pv278hbbar634799j.apps.googleusercontent.com
+            client-secret: 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
             scope: email,profile
   
   mail:
@@ -59,7 +59,7 @@ jwt:
 
 app:
   cors:
-    allowed-origins: http://localhost:5173,http://localhost:3000
+    allowed-origins: http://localhost:5173,http://localhost:3000,http://192.168.1.67:5173,https://jaden-nonenlightened-superspiritually.ngrok-free.dev
 
 momo:
   base-url: https://sandbox.momodeveloper.mtn.com

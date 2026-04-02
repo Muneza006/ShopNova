@@ -42,6 +42,13 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             return userRepository.save(newUser);
         });
 
+        // Block check — redirect with error if user is blocked
+        if (!Boolean.TRUE.equals(user.getIsActive())) {
+            String blockedUrl = "http://localhost:5173/oauth2/callback?error=blocked";
+            getRedirectStrategy().sendRedirect(request, response, blockedUrl);
+            return;
+        }
+
         String token = jwtUtil.generateToken(user);
 
         // Send welcome email on every login

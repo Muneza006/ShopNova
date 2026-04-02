@@ -39,3 +39,5 @@ public class Vendor {
         createdAt = LocalDateTime.now();
     }
 }
+
+

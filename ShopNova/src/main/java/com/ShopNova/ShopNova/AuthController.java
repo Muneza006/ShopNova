@@ -64,6 +64,9 @@ public class AuthController {
             ));
         }
 
+        if (!Boolean.TRUE.equals(user.getIsActive())) {
+            return ResponseEntity.status(403).body(Map.of("error", "Your account has been blocked. Please contact support."));
+        }
         String token = jwtUtil.generateToken(user);
         emailService.sendWelcomeEmail(user.getEmail(), user.getFirstName());
         Map<String, Object> response = new HashMap<>();
@@ -137,6 +140,22 @@ public class AuthController {
         tokenRepository.save(resetToken);
         
         return ResponseEntity.ok(Map.of("message", "Password reset successful"));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body(Map.of("error", "Unauthorized"));
+        }
+        User user = userRepository.findByEmail(authentication.getName()).orElse(null);
+        if (user == null) return ResponseEntity.status(401).body(Map.of("error", "User not found"));
+        return ResponseEntity.ok(Map.of(
+            "id", user.getId(),
+            "email", user.getEmail(),
+            "firstName", user.getFirstName(),
+            "lastName", user.getLastName(),
+            "role", user.getRole()
+        ));
     }
 }
 
