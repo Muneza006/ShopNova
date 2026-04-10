@@ -26,30 +26,33 @@ const HomePage = ({ user, onAddToCart, wishlistItems = [], onToggleWishlist }) =
   }, [])
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch(`${BASE}/api/products`)
-        if (res.ok) {
-          const data = await res.json()
-          setProducts(Array.isArray(data) ? data : [])
-          
-          // Set hot deals (products with discount)
-          const deals = data.filter(p => p.discountPrice && p.discountPrice < p.price).slice(0, 10)
-          setHotDeals(deals)
-          
-          // Set flash deals (random selection)
-          const flash = data.slice(0, 8)
-          setFlashDeals(flash)
-        }
-      } catch (error) {
-        console.error('Failed to fetch products:', error)
-        setProducts([])
-      } finally {
-        setLoading(false)
-      }
-    }
+    // Mock data for deployed version without backend
+    const mockProducts = [
+      { id: 1, name: 'Wireless Headphones', price: 89.99, discount: 20, image: '/headphones.jpg', category: 'Electronics', rating: 4.5 },
+      { id: 2, name: 'Smart Watch', price: 199.99, discount: 15, image: '/watch.jpg', category: 'Electronics', rating: 4.8 },
+      { id: 3, name: 'Laptop Stand', price: 45.99, discount: 10, image: '/stand.jpg', category: 'Electronics', rating: 4.2 },
+      { id: 4, name: 'Denim Jacket', price: 79.99, discount: 30, image: '/jacket.jpg', category: 'Fashion', rating: 4.6 },
+      { id: 5, name: 'Running Shoes', price: 120.00, discount: 25, image: '/shoes.jpg', category: 'Fashion', rating: 4.7 },
+      { id: 6, name: 'Backpack', price: 65.00, discount: 20, image: '/backpack.jpg', category: 'Fashion', rating: 4.4 },
+      { id: 7, name: 'Coffee Maker', price: 149.99, discount: 15, image: '/coffee.jpg', category: 'Home', rating: 4.3 },
+      { id: 8, name: 'Desk Lamp', price: 35.99, discount: 10, image: '/lamp.jpg', category: 'Home', rating: 4.5 }
+    ]
 
-    fetchProducts()
+    // Try to fetch from backend, fallback to mock data
+    fetch(`${BASE}/api/products`)
+      .then(res => res.ok ? res.json() : mockProducts)
+      .then(data => {
+        setProducts(Array.isArray(data) ? data : mockProducts)
+        setHotDeals(Array.isArray(data) ? data.slice(0, 4) : mockProducts.slice(0, 4))
+        setFlashDeals(Array.isArray(data) ? data.slice(0, 6) : mockProducts.slice(0, 6))
+      })
+      .catch(() => {
+        // Fallback to mock data if backend fails
+        setProducts(mockProducts)
+        setHotDeals(mockProducts.slice(0, 4))
+        setFlashDeals(mockProducts.slice(0, 6))
+      })
+      .finally(() => setLoading(false))
   }, [])
 
   useEffect(() => {
