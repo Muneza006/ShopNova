@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API = import.meta.env.VITE_API_URL || 'http://localhost:8081'
 const auth = () => ({ headers: { Authorization: `Bearer ${localStorage.getItem('token') || ''}` } })
 
 const EMPTY_FORM = { name:'', description:'', price:'', discountPrice:'', stockQuantity:'', sku:'', imageUrl:'', isFeatured:false, categoryId:'', brandId:'' }
@@ -50,6 +50,33 @@ export default function AdminDashboard({ user, onLogout }) {
 
   useEffect(() => {
     if (!user) return
+    
+    // Mock data for deployed version without backend
+    const mockProducts = [
+      { id: 1, name: 'Wireless Headphones', price: 89.99, stockQuantity: 45, sku: 'WH001', isFeatured: true, category: { name: 'Electronics' } },
+      { id: 2, name: 'Smart Watch', price: 199.99, stockQuantity: 23, sku: 'SW002', isFeatured: true, category: { name: 'Electronics' } },
+      { id: 3, name: 'Denim Jacket', price: 79.99, stockQuantity: 67, sku: 'DJ003', isFeatured: false, category: { name: 'Fashion' } },
+      { id: 4, name: 'Coffee Maker', price: 149.99, stockQuantity: 12, sku: 'CM004', isFeatured: false, category: { name: 'Home' } }
+    ]
+    
+    const mockCategories = [
+      { id: 1, name: 'Electronics', nameRw: 'Elektroniki', nameFr: 'Électronique', productCount: 156 },
+      { id: 2, name: 'Fashion', nameRw: 'Imyenda', nameFr: 'Mode', productCount: 234 },
+      { id: 3, name: 'Home', nameRw: 'Inzu', nameFr: 'Maison', productCount: 89 }
+    ]
+    
+    const mockOrders = [
+      { id: 1, orderNumber: 'ORD-001', customerName: 'John Doe', customerEmail: 'john@example.com', total: 289.98, status: 'PENDING', createdAt: '2026-04-10T10:30:00Z', items: 2 },
+      { id: 2, orderNumber: 'ORD-002', customerName: 'Jane Smith', customerEmail: 'jane@example.com', total: 149.99, status: 'PROCESSING', createdAt: '2026-04-10T09:15:00Z', items: 1 },
+      { id: 3, orderNumber: 'ORD-003', customerName: 'Bob Johnson', customerEmail: 'bob@example.com', total: 425.00, status: 'SHIPPED', createdAt: '2026-04-09T16:45:00Z', items: 3 }
+    ]
+    
+    const mockUsers = [
+      { id: 1, name: 'John Doe', email: 'john@example.com', role: 'CUSTOMER', createdAt: '2026-04-01T10:00:00Z', lastLogin: '2026-04-10T09:30:00Z' },
+      { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'CUSTOMER', createdAt: '2026-04-02T14:20:00Z', lastLogin: '2026-04-09T15:45:00Z' },
+      { id: 3, name: 'Admin User', email: 'admin@shopnova.com', role: 'SUPER_ADMIN', createdAt: '2026-03-15T08:00:00Z', lastLogin: '2026-04-10T08:15:00Z' }
+    ]
+    
     const safe = p => p.catch(() => ({ data: [] }))
     Promise.all([
       safe(axios.get(`${API}/api/admin/products`, auth())),
@@ -57,14 +84,40 @@ export default function AdminDashboard({ user, onLogout }) {
       safe(axios.get(`${API}/api/admin/orders`, auth())),
       safe(axios.get(`${API}/api/admin/users`, auth())),
     ]).then(([p, c, o, u]) => {
-      setProducts(Array.isArray(p.data) ? p.data : [])
-      setCategories(Array.isArray(c.data) ? c.data : [])
-      setOrders(Array.isArray(o.data) ? o.data : [])
-      setUsers(Array.isArray(u.data) ? u.data : [])
+      setProducts(Array.isArray(p.data) && p.data.length > 0 ? p.data : mockProducts)
+      setCategories(Array.isArray(c.data) && c.data.length > 0 ? c.data : mockCategories)
+      setOrders(Array.isArray(o.data) && o.data.length > 0 ? o.data : mockOrders)
+      setUsers(Array.isArray(u.data) && u.data.length > 0 ? u.data : mockUsers)
     })
   }, [user])
 
   const fetchAll = () => {
+    // Mock data for deployed version without backend
+    const mockProducts = [
+      { id: 1, name: 'Wireless Headphones', price: 89.99, stockQuantity: 45, sku: 'WH001', isFeatured: true, category: { name: 'Electronics' } },
+      { id: 2, name: 'Smart Watch', price: 199.99, stockQuantity: 23, sku: 'SW002', isFeatured: true, category: { name: 'Electronics' } },
+      { id: 3, name: 'Denim Jacket', price: 79.99, stockQuantity: 67, sku: 'DJ003', isFeatured: false, category: { name: 'Fashion' } },
+      { id: 4, name: 'Coffee Maker', price: 149.99, stockQuantity: 12, sku: 'CM004', isFeatured: false, category: { name: 'Home' } }
+    ]
+    
+    const mockCategories = [
+      { id: 1, name: 'Electronics', nameRw: 'Elektroniki', nameFr: 'Électronique', productCount: 156 },
+      { id: 2, name: 'Fashion', nameRw: 'Imyenda', nameFr: 'Mode', productCount: 234 },
+      { id: 3, name: 'Home', nameRw: 'Inzu', nameFr: 'Maison', productCount: 89 }
+    ]
+    
+    const mockOrders = [
+      { id: 1, orderNumber: 'ORD-001', customerName: 'John Doe', customerEmail: 'john@example.com', total: 289.98, status: 'PENDING', createdAt: '2026-04-10T10:30:00Z', items: 2 },
+      { id: 2, orderNumber: 'ORD-002', customerName: 'Jane Smith', customerEmail: 'jane@example.com', total: 149.99, status: 'PROCESSING', createdAt: '2026-04-10T09:15:00Z', items: 1 },
+      { id: 3, orderNumber: 'ORD-003', customerName: 'Bob Johnson', customerEmail: 'bob@example.com', total: 425.00, status: 'SHIPPED', createdAt: '2026-04-09T16:45:00Z', items: 3 }
+    ]
+    
+    const mockUsers = [
+      { id: 1, name: 'John Doe', email: 'john@example.com', role: 'CUSTOMER', createdAt: '2026-04-01T10:00:00Z', lastLogin: '2026-04-10T09:30:00Z' },
+      { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'CUSTOMER', createdAt: '2026-04-02T14:20:00Z', lastLogin: '2026-04-09T15:45:00Z' },
+      { id: 3, name: 'Admin User', email: 'admin@shopnova.com', role: 'SUPER_ADMIN', createdAt: '2026-03-15T08:00:00Z', lastLogin: '2026-04-10T08:15:00Z' }
+    ]
+    
     const safe = p => p.catch(() => ({ data: [] }))
     Promise.all([
       safe(axios.get(`${API}/api/admin/products`, auth())),
@@ -72,10 +125,10 @@ export default function AdminDashboard({ user, onLogout }) {
       safe(axios.get(`${API}/api/admin/orders`, auth())),
       safe(axios.get(`${API}/api/admin/users`, auth())),
     ]).then(([p, c, o, u]) => {
-      setProducts(Array.isArray(p.data) ? p.data : [])
-      setCategories(Array.isArray(c.data) ? c.data : [])
-      setOrders(Array.isArray(o.data) ? o.data : [])
-      setUsers(Array.isArray(u.data) ? u.data : [])
+      setProducts(Array.isArray(p.data) && p.data.length > 0 ? p.data : mockProducts)
+      setCategories(Array.isArray(c.data) && c.data.length > 0 ? c.data : mockCategories)
+      setOrders(Array.isArray(o.data) && o.data.length > 0 ? o.data : mockOrders)
+      setUsers(Array.isArray(u.data) && u.data.length > 0 ? u.data : mockUsers)
     })
   }
 
