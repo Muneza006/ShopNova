@@ -453,6 +453,338 @@ export default function AdminDashboard({ user, onLogout }) {
               </div>
             </div>
           )}
+
+          {/* PRODUCTS */}
+          {activeTab === 'products' && (
+            <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:12 }}>
+                <div>
+                  <h2 style={{ fontSize:22, fontWeight:700, fontFamily:"'Syne',sans-serif" }}>Products</h2>
+                  <p style={{ color:css.muted, fontSize:13, marginTop:4 }}>Manage your product inventory</p>
+                </div>
+                <div style={{ display:'flex', gap:10 }}>
+                  <input 
+                    type="text" 
+                    placeholder="Search products..." 
+                    value={productSearch}
+                    onChange={e => setProductSearch(e.target.value)}
+                    style={{ padding:'8px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:13, width:200 }}
+                  />
+                  <button onClick={openAdd} style={{ padding:'9px 16px', background:css.orange, border:'none', borderRadius:10, color:'white', fontSize:13, fontWeight:600, cursor:'pointer' }}>+ Add Product</button>
+                </div>
+              </div>
+
+              <div style={{ background:css.bg2, border:`1px solid ${css.border}`, borderRadius:16, overflow:'hidden' }}>
+                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                  <thead>
+                    <tr style={{ background:css.bg3 }}>
+                      {['Image','Name','Category','Price','Stock','SKU','Status','Actions'].map(h => (
+                        <th key={h} style={{ textAlign:'left', padding:'12px 20px', fontSize:11, fontWeight:700, color:css.muted, textTransform:'uppercase', letterSpacing:'1px' }}>
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products
+                      .filter(p => !productSearch || p.name.toLowerCase().includes(productSearch.toLowerCase()))
+                      .filter(p => !productCatFilter || p.category?.name === productCatFilter)
+                      .map(p => (
+                        <tr 
+                          key={p.id} 
+                          style={{ borderBottom:`1px solid rgba(255,255,255,0.04)`, cursor:'pointer' }}
+                          onClick={() => openEdit(p)}
+                          onMouseEnter={e => e.currentTarget.style.background = css.bg3}
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                        >
+                          <td style={{ padding:'12px 20px' }}>
+                            <div style={{ width:40, height:40, borderRadius:8, background:css.bg3, display:'flex', alignItems:'center', justifyContent:'center', fontSize:20 }}>
+                              {p.category?.name === 'Electronics' ? ' phones' : p.category?.name === 'Fashion' ? ' shirt' : ' home'}
+                            </div>
+                          </td>
+                          <td style={{ padding:'12px 20px' }}>
+                            <div>
+                              <p style={{ fontSize:13, fontWeight:600, marginBottom:2 }}>{p.name}</p>
+                              <p style={{ fontSize:11, color:css.muted }}>{p.sku}</p>
+                            </div>
+                          </td>
+                          <td style={{ padding:'12px 20px', fontSize:13 }}>{p.category?.name || 'N/A'}</td>
+                          <td style={{ padding:'12px 20px', fontSize:13, fontWeight:600 }}>
+                            ${p.price}
+                            {p.discountPrice && (
+                              <span style={{ fontSize:11, color:css.muted, textDecoration:'line-through', marginLeft:4 }}>
+                                ${p.discountPrice}
+                              </span>
+                            )}
+                          </td>
+                          <td style={{ padding:'12px 20px' }}>
+                            <span style={{ 
+                              fontSize:12, 
+                              fontWeight:600, 
+                              color: p.stockQuantity === 0 ? css.red : p.stockQuantity <= 5 ? css.yellow : css.green,
+                              background: p.stockQuantity === 0 ? 'rgba(239,68,68,0.12)' : p.stockQuantity <= 5 ? 'rgba(234,179,8,0.12)' : 'rgba(34,197,94,0.12)',
+                              padding:'2px 8px', borderRadius:4
+                            }}>
+                              {p.stockQuantity} units
+                            </span>
+                          </td>
+                          <td style={{ padding:'12px 20px', fontFamily:'monospace', fontSize:12, color:css.muted }}>{p.sku}</td>
+                          <td style={{ padding:'12px 20px' }}>
+                            <span style={{ 
+                              fontSize:11, 
+                              fontWeight:600, 
+                              color: p.isFeatured ? css.orange : css.muted,
+                              background: p.isFeatured ? 'rgba(249,115,22,0.12)' : 'rgba(107,114,128,0.12)',
+                              padding:'2px 8px', borderRadius:4
+                            }}>
+                              {p.isFeatured ? 'Featured' : 'Standard'}
+                            </span>
+                          </td>
+                          <td style={{ padding:'12px 20px' }}>
+                            <div style={{ display:'flex', gap:6 }}>
+                              <button 
+                                onClick={e => { e.stopPropagation(); openEdit(p) }}
+                                style={{ padding:'4px 8px', background:css.blue, border:'none', borderRadius:4, color:'white', fontSize:11, cursor:'pointer' }}
+                              >
+                                Edit
+                              </button>
+                              <button 
+                                onClick={e => { e.stopPropagation(); handleDelete(p.id) }}
+                                style={{ padding:'4px 8px', background:css.red, border:'none', borderRadius:4, color:'white', fontSize:11, cursor:'pointer' }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    {products.length === 0 && (
+                      <tr>
+                        <td colSpan={8} style={{ padding:'32px 20px', textAlign:'center', color:css.muted }}>
+                          No products yet. <button onClick={openAdd} style={{ background:'none', border:'none', color:css.orange, cursor:'pointer', fontSize:13, fontWeight:600 }}>Add your first product</button>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ORDERS */}
+          {activeTab === 'orders' && (
+            <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
+              <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:12 }}>
+                <div>
+                  <h2 style={{ fontSize:22, fontWeight:700, fontFamily:"'Syne',sans-serif" }}>Orders</h2>
+                  <p style={{ color:css.muted, fontSize:13, marginTop:4 }}>Manage customer orders</p>
+                </div>
+                <div style={{ display:'flex', gap:10 }}>
+                  <select 
+                    value={orderStatusFilter}
+                    onChange={e => setOrderStatusFilter(e.target.value)}
+                    style={{ padding:'8px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:13 }}
+                  >
+                    <option value="">All Status</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="PROCESSING">Processing</option>
+                    <option value="SHIPPED">Shipped</option>
+                    <option value="DELIVERED">Delivered</option>
+                    <option value="CANCELLED">Cancelled</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ background:css.bg2, border:`1px solid ${css.border}`, borderRadius:16, overflow:'hidden' }}>
+                <table style={{ width:'100%', borderCollapse:'collapse' }}>
+                  <thead>
+                    <tr style={{ background:css.bg3 }}>
+                      {['Order #','Customer','Date','Status','Total','Items','Actions'].map(h => (
+                        <th key={h} style={{ textAlign:'left', padding:'12px 20px', fontSize:11, fontWeight:700, color:css.muted, textTransform:'uppercase', letterSpacing:'1px' }}>
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders
+                      .filter(o => !orderStatusFilter || o.status === orderStatusFilter)
+                      .map(o => (
+                        <tr key={o.id} style={{ borderBottom:`1px solid rgba(255,255,255,0.04)` }}>
+                          <td style={{ padding:'12px 20px', fontFamily:'monospace', fontSize:12, color:css.muted }}>{o.orderNumber}</td>
+                          <td style={{ padding:'12px 20px', fontSize:13 }}>
+                            <div>
+                              <p style={{ fontWeight:600, marginBottom:2 }}>{o.customerName}</p>
+                              <p style={{ fontSize:11, color:css.muted }}>{o.customerEmail}</p>
+                            </div>
+                          </td>
+                          <td style={{ padding:'12px 20px', fontSize:13, color:css.muted }}>
+                            {new Date(o.createdAt).toLocaleDateString()}
+                          </td>
+                          <td style={{ padding:'12px 20px' }}>
+                            <span style={{ 
+                              fontSize:11, 
+                              fontWeight:600, 
+                              ...statusStyle[o.status] || { background:'rgba(107,114,128,0.12)', color:css.muted },
+                              padding:'2px 8px', borderRadius:4
+                            }}>
+                              {o.status}
+                            </span>
+                          </td>
+                          <td style={{ padding:'12px 20px', fontSize:13, fontWeight:600 }}>${o.total}</td>
+                          <td style={{ padding:'12px 20px', fontSize:13 }}>{o.items}</td>
+                          <td style={{ padding:'12px 20px' }}>
+                            <select 
+                              value={o.status}
+                              onChange={e => updateOrderStatus(o.id, e.target.value)}
+                              style={{ padding:'4px 8px', border:`1px solid ${css.border}`, borderRadius:4, background:css.bg2, color:css.text, fontSize:11, cursor:'pointer' }}
+                            >
+                              <option value="PENDING">Pending</option>
+                              <option value="PROCESSING">Processing</option>
+                              <option value="SHIPPED">Shipped</option>
+                              <option value="DELIVERED">Delivered</option>
+                              <option value="CANCELLED">Cancelled</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    {orders.length === 0 && (
+                      <tr>
+                        <td colSpan={7} style={{ padding:'32px 20px', textAlign:'center', color:css.muted }}>
+                          No orders yet
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+        {/* Product Modal */}
+        {showModal && (
+          <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.6)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:20 }}>
+            <div style={{ background:css.bg, border:`1px solid ${css.border}`, borderRadius:16, width:'100%', maxWidth:500, maxHeight:'90vh', overflowY:'auto' }}>
+              <div style={{ padding:24, borderBottom:`1px solid ${css.border}` }}>
+                <h3 style={{ fontSize:18, fontWeight:700, margin:0 }}>
+                  {editingProduct ? 'Edit Product' : 'Add New Product'}
+                </h3>
+              </div>
+              <form onSubmit={handleSave} style={{ padding:24 }}>
+                {formError && (
+                  <div style={{ background:'rgba(239,68,68,0.12)', border:'1px solid rgba(239,68,68,0.3)', borderRadius:8, padding:12, marginBottom:16 }}>
+                    <p style={{ color:css.red, fontSize:13, margin:0 }}>{formError}</p>
+                  </div>
+                )}
+                <div style={{ display:'grid', gap:16 }}>
+                  <div>
+                    <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>Product Name *</label>
+                    <input
+                      type="text"
+                      value={form.name}
+                      onChange={e => setForm({...form, name:e.target.value})}
+                      style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14 }}
+                      placeholder="Enter product name"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>Description</label>
+                    <textarea
+                      value={form.description}
+                      onChange={e => setForm({...form, description:e.target.value})}
+                      style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14, minHeight:80, resize:'vertical' }}
+                      placeholder="Enter product description"
+                    />
+                  </div>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+                    <div>
+                      <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>Price ($) *</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={form.price}
+                        onChange={e => setForm({...form, price:e.target.value})}
+                        style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14 }}
+                        placeholder="0.00"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>Discount Price ($)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={form.discountPrice}
+                        onChange={e => setForm({...form, discountPrice:e.target.value})}
+                        style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14 }}
+                        placeholder="0.00"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
+                    <div>
+                      <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>Stock Quantity *</label>
+                      <input
+                        type="number"
+                        value={form.stockQuantity}
+                        onChange={e => setForm({...form, stockQuantity:e.target.value})}
+                        style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14 }}
+                        placeholder="0"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>SKU</label>
+                      <input
+                        type="text"
+                        value={form.sku}
+                        onChange={e => setForm({...form, sku:e.target.value})}
+                        style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14 }}
+                        placeholder="SKU-001"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={{ display:'block', fontSize:12, fontWeight:600, color:css.text, marginBottom:6 }}>Image URL</label>
+                    <input
+                      type="url"
+                      value={form.imageUrl}
+                      onChange={e => setForm({...form, imageUrl:e.target.value})}
+                      style={{ width:'100%', padding:'10px 12px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14 }}
+                      placeholder="https://example.com/image.jpg"
+                    />
+                  </div>
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <input
+                      type="checkbox"
+                      checked={form.isFeatured}
+                      onChange={e => setForm({...form, isFeatured:e.target.checked})}
+                      style={{ width:16, height:16 }}
+                    />
+                    <label style={{ fontSize:13, color:css.text, cursor:'pointer' }}>Featured Product</label>
+                  </div>
+                </div>
+                <div style={{ display:'flex', gap:12, marginTop:24 }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    style={{ flex:1, padding:'10px 16px', border:`1px solid ${css.border}`, borderRadius:8, background:css.bg2, color:css.text, fontSize:14, fontWeight:600, cursor:'pointer' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    style={{ flex:1, padding:'10px 16px', border:'none', borderRadius:8, background:css.orange, color:'white', fontSize:14, fontWeight:600, cursor:'pointer', opacity: saving ? 0.6 : 1 }}
+                  >
+                    {saving ? 'Saving...' : (editingProduct ? 'Update Product' : 'Add Product')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
         </main>
       </div>
     </div>
