@@ -53,10 +53,10 @@ export default function AdminDashboard({ user, onLogout }) {
     
     // Mock data for deployed version without backend
     const mockProducts = [
-      { id: 1, name: 'Wireless Headphones', price: 89.99, stockQuantity: 45, sku: 'WH001', isFeatured: true, category: { name: 'Electronics' } },
-      { id: 2, name: 'Smart Watch', price: 199.99, stockQuantity: 23, sku: 'SW002', isFeatured: true, category: { name: 'Electronics' } },
-      { id: 3, name: 'Denim Jacket', price: 79.99, stockQuantity: 67, sku: 'DJ003', isFeatured: false, category: { name: 'Fashion' } },
-      { id: 4, name: 'Coffee Maker', price: 149.99, stockQuantity: 12, sku: 'CM004', isFeatured: false, category: { name: 'Home' } }
+      { id: 1, name: 'Wireless Headphones', price: 89.99, discountPrice: 79.99, stockQuantity: 45, sku: 'WH001', isFeatured: true, imageUrl: '/headphones.jpg', description: 'High-quality wireless headphones with noise cancellation', category: { id: 1, name: 'Electronics' }, brand: { id: 1, name: 'Sony' } },
+      { id: 2, name: 'Smart Watch', price: 199.99, stockQuantity: 23, sku: 'SW002', isFeatured: true, imageUrl: '/watch.jpg', description: 'Advanced smartwatch with health tracking features', category: { id: 1, name: 'Electronics' }, brand: { id: 2, name: 'Apple' } },
+      { id: 3, name: 'Denim Jacket', price: 79.99, discountPrice: 59.99, stockQuantity: 67, sku: 'DJ003', isFeatured: false, imageUrl: '/jacket.jpg', description: 'Classic denim jacket for casual wear', category: { id: 2, name: 'Fashion' }, brand: { id: 3, name: 'Levi\'s' } },
+      { id: 4, name: 'Coffee Maker', price: 149.99, stockQuantity: 12, sku: 'CM004', isFeatured: false, imageUrl: '/coffee.jpg', description: 'Automatic coffee maker with timer function', category: { id: 3, name: 'Home' }, brand: { id: 4, name: 'Keurig' } }
     ]
     
     const mockCategories = [
@@ -94,10 +94,10 @@ export default function AdminDashboard({ user, onLogout }) {
   const fetchAll = () => {
     // Mock data for deployed version without backend
     const mockProducts = [
-      { id: 1, name: 'Wireless Headphones', price: 89.99, stockQuantity: 45, sku: 'WH001', isFeatured: true, category: { name: 'Electronics' } },
-      { id: 2, name: 'Smart Watch', price: 199.99, stockQuantity: 23, sku: 'SW002', isFeatured: true, category: { name: 'Electronics' } },
-      { id: 3, name: 'Denim Jacket', price: 79.99, stockQuantity: 67, sku: 'DJ003', isFeatured: false, category: { name: 'Fashion' } },
-      { id: 4, name: 'Coffee Maker', price: 149.99, stockQuantity: 12, sku: 'CM004', isFeatured: false, category: { name: 'Home' } }
+      { id: 1, name: 'Wireless Headphones', price: 89.99, discountPrice: 79.99, stockQuantity: 45, sku: 'WH001', isFeatured: true, imageUrl: '/headphones.jpg', description: 'High-quality wireless headphones with noise cancellation', category: { id: 1, name: 'Electronics' }, brand: { id: 1, name: 'Sony' } },
+      { id: 2, name: 'Smart Watch', price: 199.99, stockQuantity: 23, sku: 'SW002', isFeatured: true, imageUrl: '/watch.jpg', description: 'Advanced smartwatch with health tracking features', category: { id: 1, name: 'Electronics' }, brand: { id: 2, name: 'Apple' } },
+      { id: 3, name: 'Denim Jacket', price: 79.99, discountPrice: 59.99, stockQuantity: 67, sku: 'DJ003', isFeatured: false, imageUrl: '/jacket.jpg', description: 'Classic denim jacket for casual wear', category: { id: 2, name: 'Fashion' }, brand: { id: 3, name: 'Levi\'s' } },
+      { id: 4, name: 'Coffee Maker', price: 149.99, stockQuantity: 12, sku: 'CM004', isFeatured: false, imageUrl: '/coffee.jpg', description: 'Automatic coffee maker with timer function', category: { id: 3, name: 'Home' }, brand: { id: 4, name: 'Keurig' } }
     ]
     
     const mockCategories = [
