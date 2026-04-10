@@ -4,13 +4,13 @@ spring:
   devtools:
     restart:
       enabled: false
-  
+
   datasource:
     url: jdbc:postgresql://localhost:5432/shopnova_db
     username: postgres
     password: Muneza1@
     driver-class-name: org.postgresql.Driver
-  
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,7 +20,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     open-in-view: false
-  
+
   flyway:
     enabled: false
 
@@ -32,7 +32,7 @@ spring:
             client-id: 614401079406-tbvue7pbiit5uk0pv278hbbar634799j.apps.googleusercontent.com
             client-secret: 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
             scope: email,profile
-  
+
   mail:
     host: smtp.gmail.com
     port: 587
@@ -44,7 +44,7 @@ spring:
           auth: true
           starttls:
             enable: true
-  
+
 server:
   port: 8080
   error:
@@ -59,7 +59,7 @@ jwt:
 
 app:
   cors:
-    allowed-origins: http://localhost:5173,http://localhost:3000,http://192.168.1.67:5173,https://jaden-nonenlightened-superspiritually.ngrok-free.dev
+    allowed-origins: http://localhost:5173,http://localhost:3000,http://192.168.1.67:5173
 
 momo:
   base-url: https://sandbox.momodeveloper.mtn.com
