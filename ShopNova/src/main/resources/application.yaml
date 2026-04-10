@@ -6,9 +6,9 @@ spring:
       enabled: false
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/shopnova_db
-    username: postgres
-    password: Muneza1@
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/shopnova_db}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:Muneza1@}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -59,7 +59,7 @@ jwt:
 
 app:
   cors:
-    allowed-origins: http://localhost:5173,http://localhost:3000,http://192.168.1.67:5173
+    allowed-origins: http://localhost:5173,http://localhost:3000,http://192.168.1.67:5173,https://shop-nova-uzce.vercel.app
 
 momo:
   base-url: https://sandbox.momodeveloper.mtn.com
